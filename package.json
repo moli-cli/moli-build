@@ -1,0 +1,32 @@
+{
+  "name": "moli-build",
+  "version": "0.0.2",
+  "description": "moli plugin for build",
+  "main": "index.js",
+  "bin": {
+    "moli-build": "./bin/moli-build.js"
+  },
+  "scripts": {
+    "test": "node test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yymoli/moli-build.git"
+  },
+  "keywords": [
+    "moli",
+    "build"
+  ],
+  "author": "gct@yonyou.com",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yymoli/moli-build/issues"
+  },
+  "homepage": "https://github.com/yymoli/moli-build#readme",
+  "dependencies": {
+    "chalk": "^2.1.0",
+    "minimist": "^1.2.0",
+    "webpack": "^2.7.0",
+    "webpack-merge": "^4.1.0"
+  }
+}
