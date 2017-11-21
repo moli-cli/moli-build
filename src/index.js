@@ -1,7 +1,5 @@
+var log = require("../utils/moliLogUtil");
 var chalk = require("chalk");
-var path = require("path");
-var webpack = require("webpack");
-var fs = require("fs");
 
 /**
  * 这个是云构建服务器默认ip
@@ -25,10 +23,27 @@ const DEFAULT_SERVER_USERNAME = "littlemod";
  * 获取帮助
  */
 function getHelp() {
-    console.log(chalk.green(" Usage : "));
-    console.log();
-    console.log(chalk.green(" moli build"));
-    console.log();
+    log.log(" Usage : ");
+    log.log("");
+    log.log("  moli build <platform> [options]");
+    log.log("");
+    log.log("  platform:");
+    log.log("");
+    log.log("    ios:       build ios app");
+    log.log("    android:   build android app");
+    log.log("");
+    log.log("  options:");
+    log.log("");
+    log.log("    -h, --help         build help");
+    log.log("    -s, --server       build server ip");
+    log.log("    -p, --port         build server port");
+    log.log("    -u, --username     build server username");
+    log.log("");
+    log.log("  Examples:");
+    log.log("");
+    log.log("    $ moli build ios -s 123.103.9.204 -p 8050");
+    log.log("    $ moli build android -s 123.103.9.204 -p 8050");
+    console.log("");
     process.exit(0);
 }
 
@@ -36,60 +51,19 @@ function getHelp() {
  * 版本
  */
 function getVersion() {
-    console.log(chalk.green(require("../package.json").version));
+    var version = require("../package.json").version;
+    log.success("version:" + version);
     process.exit(0);
-}
-
-/**
- * 本地生成public
- */
-function build() {
-    console.log(chalk.green(`[version]:${require("../package.json").version}`));
-    console.log("[moli]: Operation now, please wait");
-    var webpackConfig = require("./webpack.base");
-    webpack(webpackConfig, function (err, stats) {
-        if (!err) {
-            console.log('\n' + stats.toString({
-                hash: false,
-                chunks: false,
-                children: false,
-                colors: true
-            }));
-            console.log("\n[moli]: moli build success!");
-        } else {
-            console.log(err);
-        }
-    });
-}
-
-/**
- * moli build log
- * @param msg
- */
-function $moliBuildInfo(msg) {
-    if (chalk) {
-        console.log(chalk.hex('#54511f')('[moli-build-info] >>> ' + msg));
-    } else {
-        console.log('[moli-build-info] >>> ' + msg);
-    }
-}
-
-/**
- *
- * @param msg
- */
-function $moliBuildErr(msg) {
-    if (chalk) {
-        console.log(chalk.hex('#ff0000')('[moli-build-error] >>> ' + msg));
-    } else {
-        console.log('[moli-build-error] >>> ' + msg);
-    }
 }
 
 module.exports = {
     plugin: function (options) {
-        var commands = options.cmd;
-        var pluginname = options.name;
+        var args = {};
+        args.commands = options.cmd;
+        args.pluginname = options.name;
+        args.buildServerIp = DEFAULT_SERVER_IP;
+        args.buildServerPort = DEFAULT_SERVER_PORT;
+        args.buildServerUserName = DEFAULT_SERVER_USERNAME;
         if (options.argv.h || options.argv.help) {
             getHelp();
         }
@@ -97,21 +71,29 @@ module.exports = {
             getVersion();
         }
         if (options.argv.s || options.argv.server) {
-            var moliProdConfig = require(path.resolve(".", "moli.config.js")).prodConfig;
-            var mobileOutputPath = moliProdConfig.output.path;
-            // 检查是否有public包产出
-            $moliBuildInfo("检查移动app生成的目录：" + mobileOutputPath);
-            if (!fs.existsSync(mobileOutputPath)) {
-                $moliBuildErr("Moble File Path :" + mobileOutputPath + " is Empty!");
-                process.exit(0);
-            }
-            // 设置默认值
-            console.log("-server:" + options.argv.s);
-            // 创建native/platform/projectName/www
-            // 压缩native/platform/projectName.zip
-            // 创建output/platform/export.zip
-        }
-        build();
+            log.info("s:" + options.argv.s);
+            log.info("server:" + options.argv.server);
+            process.exit(1);
+            if (args.commands.length == 1) {
+                log.error("Use BuildServer Build App Must Have platform param!");
+            } else {
+                // 获取构建平台信息
+                var buildPlatform = args.commands[1];
+                args.buildPlatform = buildPlatform;
+                var build = require(`../libs/build-server`);
+                if (options.argv.p || options.argv.port) {
+                    var buildServerPort = options.argv.port;
+                    if (isNaN(buildServerPort)) {
+                        args.buildServerPort = buildServerPort;
+                    }
+                }
 
+                build.build(args);
+            }
+        } else {
+            // 本地native构建，构建react
+            var webpackBuild = require("../libs/build");
+            webpackBuild.build(args);
+        }
     }
-}
+};
