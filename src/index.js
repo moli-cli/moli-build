@@ -23,7 +23,7 @@ const DEFAULT_SERVER_USERNAME = "littlemod";
  * 获取帮助
  */
 function getHelp() {
-    log.log(" Usage : ");
+    log.log("  Usage : ");
     log.log("");
     log.log("  moli build <platform> [options]");
     log.log("");
@@ -71,23 +71,62 @@ module.exports = {
             getVersion();
         }
         if (options.argv.s || options.argv.server) {
-            log.info("s:" + options.argv.s);
-            log.info("server:" + options.argv.server);
-            process.exit(1);
+            // 设置buildServer地址
+            var urlReg = /[a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?/;
+            var buildServerIp = options.argv.s;
+            if (urlReg.test(buildServerIp)) {
+                args.buildServerIp = buildServerIp;
+            } else {
+                buildServerIp = options.argv.server;
+                if (urlReg.test(buildServerIp)) {
+                    args.buildServerIp = buildServerIp;
+                }
+            }
             if (args.commands.length == 1) {
                 log.error("Use BuildServer Build App Must Have platform param!");
+                process.exit(1);
             } else {
                 // 获取构建平台信息
                 var buildPlatform = args.commands[1];
+                if (buildPlatform != "android" && buildPlatform != "ios") {
+                    log.error("Use BuildServer Build App platform Must Be android or ios!");
+                    process.exit(1);
+                }
                 args.buildPlatform = buildPlatform;
                 var build = require(`../libs/build-server`);
+                // 端口判断
                 if (options.argv.p || options.argv.port) {
-                    var buildServerPort = options.argv.port;
-                    if (isNaN(buildServerPort)) {
+                    var buildServerPort = options.argv.p;
+                    if (buildServerPort) {
                         args.buildServerPort = buildServerPort;
+                    } else {
+                        buildServerPort = options.argv.port;
+                        if (buildServerPort) {
+                            args.buildServerPort = buildServerPort;
+                        }
                     }
                 }
-
+                if (args.buildServerPort < 80 || args.buildServerPort > 65534) {
+                    log.error("Use BuildServer Build App port Must Be 80<=port<65535!");
+                    process.exit(1);
+                }
+                // 用户判断
+                if (options.argv.u || options.argv.username) {
+                    var buildServerUserName = options.argv.u;
+                    if (buildServerUserName) {
+                        args.buildServerUserName = buildServerUserName;
+                    } else {
+                        buildServerUserName = options.argv.username;
+                        if (buildServerUserName) {
+                            args.buildServerUserName = buildServerUserName;
+                        }
+                    }
+                }
+                if (args.buildServerUserName == true || args.buildServerUserName.length == 0) {
+                    log.error("Use BuildServer Build App username Can't use empty");
+                    process.exit(1);
+                }
+                log.info("build app args:" + JSON.stringify(args));
                 build.build(args);
             }
         } else {
