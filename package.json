@@ -1,6 +1,6 @@
 {
   "name": "moli-build",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "moli plugin for build",
   "main": "index.js",
   "bin": {

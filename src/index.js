@@ -93,7 +93,7 @@ module.exports = {
                     process.exit(1);
                 }
                 args.buildPlatform = buildPlatform;
-                var build = require(`../libs/build-server`);
+                var buildServer = require(`../libs/build-server`);
                 // 端口判断
                 if (options.argv.p || options.argv.port) {
                     var buildServerPort = options.argv.p;
@@ -126,12 +126,13 @@ module.exports = {
                     log.error("Use BuildServer Build App username Can't use empty");
                     process.exit(1);
                 }
-                log.info("build app args:" + JSON.stringify(args));
-                build.build(args);
+                log.info("build mobile app args:" + JSON.stringify(args));
+                buildServer.build(args);
             }
         } else {
             // 本地native构建，构建react
             var webpackBuild = require("../libs/build");
+            log.info("build native package args:" + JSON.stringify(args));
             webpackBuild.build(args);
         }
     }

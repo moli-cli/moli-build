@@ -11,8 +11,7 @@ var merge = require("webpack-merge");
 
 module.exports = {
     build: function (args) {
-        log.info(`[version]:${require("../package.json").version}`);
-        log.info("[moli]: Operation now, please wait");
+        log.info("Operation Now, Please Wait...");
         var baseConfig = {
             entry: {},
             output: {},
@@ -31,7 +30,7 @@ module.exports = {
                     children: false,
                     colors: true
                 }));
-                log.log("\n[moli]: moli build success!");
+                log.success("Build Native Package Success!");
             } else {
                 log.error(err);
             }
