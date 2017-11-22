@@ -10,7 +10,7 @@ var webpack = require("webpack");
 var merge = require("webpack-merge");
 
 module.exports = {
-    build: function (args) {
+    build: function () {
         log.info("Operation Now, Please Wait...");
         var baseConfig = {
             entry: {},

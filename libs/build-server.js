@@ -10,12 +10,13 @@ var path = require("path");
 var zipper = require("zip-local");
 var needle = require("needle");
 
-const FILE_MOLI_CONFIG_JS = "moli.config.js";
 const FILE_MOBILEAPPCONFIG_JSON = "mobileAppConfig.json";
 const FILE_CONFIG_JSON = "config.json";
 const FILE_EXPORT_ZIP = "export.zip";
 const DIR_NATIVE = "native";
 const DIR_OUTPUT = "output";
+const DIR_PUBLIC = "public";
+const DIR_MOBILE = "mobile";
 const DIR_WWW = "www";
 const FILE_TYPE_ZIP = ".zip";
 const BUILD_URL = "/ump/web/cordovabuild/buildProject";
@@ -26,9 +27,8 @@ module.exports = {
         var buildPlatform = args.buildPlatform;
         // 获取当前项目路径
         var projectDirPath = process.cwd();
-        // 获取public包产出目录
-        var moliProdConfig = require(path.join(projectDirPath, FILE_MOLI_CONFIG_JS)).prodConfig;
-        var mobileOutputPath = moliProdConfig.output.path;
+        // 获取public/mobile包产出目录
+        var mobileOutputPath = path.join(projectDirPath, DIR_PUBLIC, DIR_MOBILE);
         // 检查是否有public包产出
         log.info("Check Mobile File Path ：" + mobileOutputPath);
         if (!fs.existsSync(mobileOutputPath)) {
@@ -113,6 +113,8 @@ module.exports = {
             multipart: true,
             output: path.join(outputDirPath, FILE_EXPORT_ZIP)
         }, function (err, resp, data) {
+            // 加个换行
+            log.log("");
             if (err) {
                 log.error("Build App Error:\n" + err);
                 process.exit(1);

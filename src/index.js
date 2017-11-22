@@ -1,5 +1,4 @@
 var log = require("../utils/moliLogUtil");
-var chalk = require("chalk");
 
 /**
  * 这个是云构建服务器默认ip
@@ -19,6 +18,9 @@ const DEFAULT_SERVER_PORT = "8050";
  */
 const DEFAULT_SERVER_USERNAME = "littlemod";
 
+const PACKAGE_TYPE_PC = "pc";
+const PACKAGE_TYPE_MOBILE = "mobile";
+
 /**
  * 获取帮助
  */
@@ -34,16 +36,19 @@ function getHelp() {
     log.log("");
     log.log("  options:");
     log.log("");
+    log.log("    -m, --mobile       build native mobile package");
+    log.log("    -w, --web          build native web package");
     log.log("    -h, --help         build help");
     log.log("    -s, --server       build server ip");
     log.log("    -p, --port         build server port");
     log.log("    -u, --username     build server username");
+    log.log("    -w, --username     build server username");
     log.log("");
     log.log("  Examples:");
     log.log("");
     log.log("    $ moli build ios -s 123.103.9.204 -p 8050");
     log.log("    $ moli build android -s 123.103.9.204 -p 8050");
-    console.log("");
+    log.log("");
     process.exit(0);
 }
 
@@ -69,6 +74,12 @@ module.exports = {
         }
         if (options.argv.v || options.argv.version) {
             getVersion();
+        }
+        if (options.argv.w || options.argv.web) {
+            process.env.NODE_MOLIENV = PACKAGE_TYPE_PC;
+        }
+        if (options.argv.m || options.argv.mobile) {
+            process.env.NODE_MOLIENV = PACKAGE_TYPE_MOBILE;
         }
         if (options.argv.s || options.argv.server) {
             // 设置buildServer地址
@@ -131,9 +142,11 @@ module.exports = {
             }
         } else {
             // 本地native构建，构建react
+            if (!process.env.NODE_MOLIENV) {
+                process.env.NODE_MOLIENV = PACKAGE_TYPE_PC;
+            }
             var webpackBuild = require("../libs/build");
-            log.info("build native package args:" + JSON.stringify(args));
-            webpackBuild.build(args);
+            webpackBuild.build();
         }
     }
 };
