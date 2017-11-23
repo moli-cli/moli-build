@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/yymoli/moli-build.git"
+    "url": "git+https://github.com/moli-cli/moli-build.git"
   },
   "keywords": [
     "moli",
@@ -20,9 +20,9 @@
   "author": "gct@yonyou.com",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/yymoli/moli-build/issues"
+    "url": "https://github.com/moli-cli/moli-build/issues"
   },
-  "homepage": "https://github.com/yymoli/moli-build#readme",
+  "homepage": "https://github.com/moli-cli/moli-build#readme",
   "dependencies": {
     "chalk": "^2.1.0",
     "minimist": "^1.2.0",

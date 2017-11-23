@@ -12,28 +12,36 @@ var merge = require("webpack-merge");
 module.exports = {
     build: function () {
         log.info("Operation Now, Please Wait...");
-        var baseConfig = {
-            entry: {},
-            output: {},
-            module: {
-                rules: []
-            },
-            plugins: []
-        };
-        var prodConfig = require(path.join(process.cwd(), "moli.config.js")).prodConfig;
-        var webpackConfig = merge(baseConfig, prodConfig);
-        webpack(webpackConfig, function (err, stats) {
-            if (!err) {
-                log.log('\n' + stats.toString({
-                    hash: false,
-                    chunks: false,
-                    children: false,
-                    colors: true
-                }));
-                log.success("Build Native Package Success!");
-            } else {
-                log.error(err);
-            }
-        });
+        try {
+            var baseConfig = {
+                entry: {},
+                output: {},
+                module: {
+                    rules: []
+                },
+                plugins: []
+            };
+
+            var prodConfig = require(path.join(process.cwd(), "moli.config.js")).prodConfig;
+            var webpackConfig = merge(baseConfig, prodConfig);
+            webpack(webpackConfig, function (err, stats) {
+                if (!err) {
+                    log.log('\n' + stats.toString({
+                        hash: false,
+                        chunks: false,
+                        children: false,
+                        colors: true
+                    }));
+                    log.success("Build Native Package Success!");
+                } else {
+                    log.error(err);
+                }
+            });
+        } catch (e) {
+            log.error(e);
+            log.error("Please check the configuration file");
+            process.exit(0);
+        } finally {
+        }
     }
 };
