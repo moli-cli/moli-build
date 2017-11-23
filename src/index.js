@@ -56,8 +56,7 @@ function getHelp() {
  * 版本
  */
 function getVersion() {
-    var version = require("../package.json").version;
-    log.success("version:" + version);
+    log.success("version:" + require("../package.json").version);
     process.exit(0);
 }
 
