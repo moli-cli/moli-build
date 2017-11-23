@@ -38,11 +38,11 @@ function getHelp() {
     log.log("");
     log.log("    -m, --mobile       build native mobile package");
     log.log("    -w, --web          build native web package");
-    log.log("    -h, --help         build help");
     log.log("    -s, --server       build server ip");
     log.log("    -p, --port         build server port");
     log.log("    -u, --username     build server username");
-    log.log("    -w, --username     build server username");
+    log.log("    -h, --help         moli-build help info");
+    log.log("    -v, --version      moli-build version");
     log.log("");
     log.log("  Examples:");
     log.log("");
