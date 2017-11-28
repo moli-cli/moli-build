@@ -101,13 +101,13 @@ module.exports = {
             parse_response: false
         });
         log.info("Start Send Build App Request To BuildServer.");
-        log.info("App Is Building.. Please Wait For A Moment");
+        log.info("App Is Building.. Please Wait For A Moment.");
         // 发送构建命令开始等待
         var startTime = new Date().getTime();
         // 这里需要定时函数处理打包延迟
-        log.logInLine("Building.", "#ff00ff");
+        log.logInLine("Building.", "#00ff00");
         var buildAppTimer = setInterval(function () {
-            log.logInLine(".", "#ff00ff")
+            log.logInLine(".", "#00ff00")
         }, 3000);
         needle.post(buildAppUrl, data, {
             multipart: true,

@@ -21,8 +21,9 @@ module.exports = {
                 },
                 plugins: []
             };
-
+            // 获取配置文件中的prodConfig
             var prodConfig = require(path.join(process.cwd(), "moli.config.js")).prodConfig;
+            // 合并webpackConfig
             var webpackConfig = merge(baseConfig, prodConfig);
             webpack(webpackConfig, function (err, stats) {
                 if (!err) {
