@@ -25,6 +25,8 @@ const PACKAGE_TYPE_MOBILE = "mobile";
  * 获取帮助
  */
 function getHelp() {
+    log.success("moli build command help info");
+    log.log();
     log.log("  Usage : ");
     log.log("");
     log.log("  moli build <platform> [options]");
@@ -38,6 +40,7 @@ function getHelp() {
     log.log("");
     log.log("    -m, --mobile       build native mobile package");
     log.log("    -w, --web          build native web package");
+    log.log("    --custom [type]    build native user custom [type] package");
     log.log("    -s, --server       build server ip");
     log.log("    -p, --port         build server port");
     log.log("    -u, --username     build server username");
@@ -46,7 +49,9 @@ function getHelp() {
     log.log("");
     log.log("  Examples:");
     log.log("");
-    log.log("    $ moli build ios -s 123.103.9.204 -p 8050");
+    log.log("    $ moli build -m");
+    log.log("    $ moli build -custom tv");
+    log.log("    $ moli build ios -s");
     log.log("    $ moli build android -s 123.103.9.204 -p 8050");
     log.log("");
     process.exit(0);
@@ -79,6 +84,10 @@ module.exports = {
         }
         if (options.argv.m || options.argv.mobile) {
             process.env.NODE_MOLIENV = PACKAGE_TYPE_MOBILE;
+        }
+        // 用户自定义模式
+        if (options.argv.custom) {
+            process.env.NODE_MOLIENV = options.argv.custom;
         }
         if (options.argv.s || options.argv.server) {
             // 设置buildServer地址
@@ -144,6 +153,7 @@ module.exports = {
             if (!process.env.NODE_MOLIENV) {
                 process.env.NODE_MOLIENV = PACKAGE_TYPE_PC;
             }
+            log.info("native build env:" + process.env.NODE_MOLIENV);
             var webpackBuild = require("../libs/build");
             webpackBuild.build();
         }
