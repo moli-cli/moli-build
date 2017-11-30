@@ -105,9 +105,9 @@ module.exports = {
         // 发送构建命令开始等待
         var startTime = new Date().getTime();
         // 这里需要定时函数处理打包延迟
-        log.logInLine("Building.", "#00ff00");
+        log.logInLine("Building.");
         var buildAppTimer = setInterval(function () {
-            log.logInLine(".", "#00ff00")
+            log.logInLine(".")
         }, 3000);
         needle.post(buildAppUrl, data, {
             multipart: true,
