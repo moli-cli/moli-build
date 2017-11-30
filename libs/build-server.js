@@ -10,7 +10,7 @@ var path = require("path");
 var zipper = require("zip-local");
 var needle = require("needle");
 
-const FILE_MOBILEAPPCONFIG_JSON = "mobileAppConfig.json";
+const FILE_MOBILEAPPCONFIG_JSON = "app.config.json";
 const FILE_CONFIG_JSON = "config.json";
 const FILE_EXPORT_ZIP = "export.zip";
 const DIR_NATIVE = "native";
@@ -39,10 +39,10 @@ module.exports = {
         log.info("Check MobileAppConfig File Path ：" + mobileOutputPath);
         var mobileAppConfigFile = path.join(projectDirPath, FILE_MOBILEAPPCONFIG_JSON);
         if (!fs.existsSync(mobileAppConfigFile)) {
-            log.error("Can't Found Moli Project mobileAppConfig.json File.");
+            log.error("Can't Found Moli Project app.config.json File.");
             process.exit(1);
         }
-        log.info("Read mobileAppConfig.json Info....");
+        log.info("Read app.config.json Info....");
         var mobileAppConfigObj = JSON.parse(fs.readFileSync(mobileAppConfigFile));
         var projectName = mobileAppConfigObj.buildSetting.projectName;
         var appName = mobileAppConfigObj.buildSetting.appName;
